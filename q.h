@@ -17,8 +17,6 @@ typedef struct queueElement{
     struct queueElement *previous;  //pointer to previous node
 }queueElement;
 
-//queueElement *head = NULL;
-//queueElement *tail = NULL;
 
 //returns a pointer to a new q-element
 queueElement *NewItem(){
@@ -61,7 +59,34 @@ void AddQueue(queueElement **head, queueElement *item) {
 
 //deletes an item from head and returns a pointer to the deleted item
 queueElement *DelQueue(queueElement **head){
-    
+
+    queueElement *tmp = *head;  //return temp after head is deleted
+
+    //check if queue is already empty
+    if (*head == NULL){
+        return NULL;
+    }
+
+    //if there is only one element in the queue
+    //which happens only if the element points to itself
+    if ((*head)->next == *head && (*head)->previous == *head){
+        *head = NULL;
+
+    }
+    //more than one element
+    else{
+        //previous pointer of element after head points to the last element
+        (*head)->next->previous = (*head)->previous;
+
+        //next pointer of last element points to element after head
+        (*head)->previous->next = (*head)->next;
+
+        //make element after head the new head
+        (*head) = (*head)->next;
+    }
+
+    return tmp;
+
 }
 
 
