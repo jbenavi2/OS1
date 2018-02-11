@@ -89,7 +89,10 @@ queueElement *DelQueue(queueElement **head){
 
 }
 
-
+//Moves the header pointer to the next element in the queue
+void RotateQ(queueElement **head){
+    (*head) = (*head)->next;
+}
 
 
 
