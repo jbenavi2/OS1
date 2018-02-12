@@ -53,6 +53,16 @@ int main() {
 
     PrintQ(*head);
 
+    item = NewItem();
+    item->payload= 15;
+    AddQueue(head, item);
+
+    PrintQ(*head);
+
+    RotateQ(head);
+
+    PrintQ(*head);
+
 
     printf("hello, world");
     return 0;
