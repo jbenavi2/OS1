@@ -6,48 +6,53 @@
 int main() {
 
 
-    queueElement **head;
-    queueElement *item;
-    queueElement *item2;
-    queueElement *item3;
+//    queueElement **head;
+//    queueElement *item;
+//    queueElement *item2;
+//    queueElement *item3;
+//
+//    head = malloc(sizeof(queueElement));
+//
+//    InitQueue(head);
+//
+//
+//
+//
+//    printf("%d\n", (*head)->next->next->next->payload);
 
+    queueElement **head;
     head = malloc(sizeof(queueElement));
+    int i;
 
     InitQueue(head);
 
+    queueElement *item;
 
+    for (i = 0; i < 10; i++){
+        item = NewItem();
+        item->payload = i;
+        AddQueue(head, item);
+    }
 
-    item = NewItem();
-    item->payload = 1;
+    PrintQ(*head);
 
-    item2 = NewItem();
-    item2->payload = 2;
-
-    item3 = NewItem();
-    item3->payload = 3;
-
-    AddQueue(head, item);
-    AddQueue(head, item2);
-    AddQueue(head, item3);
-
-    printf("%d\n", (*head)->payload);
-    printf("%d\n", (*head)->next->payload);
-    printf("%d\n", (*head)->next->next->payload);
-    printf("%d\n", (*head)->next->next->next->payload);
+    for (i = 0; i < 5; i++){
+        item = DelQueue(head);
+        printf("Item deleted %d\n", item->payload);
+    }
 
     RotateQ(head);
 
-    printf("%d\n", (*head)->payload);
-    printf("%d\n", (*head)->next->payload);
-    printf("%d\n", (*head)->next->next->payload);
-    printf("%d\n", (*head)->next->next->next->payload);
+    item = DelQueue(head);
 
-    DelQueue(head);
+    printf("item Deleted %d\n", item->payload);
 
-    printf("%d\n", (*head)->payload);
-    printf("%d\n", (*head)->next->payload);
-    printf("%d\n", (*head)->next->next->payload);
-    printf("%d\n", (*head)->next->next->next->payload);
+    PrintQ(*head);
+
+    RotateQ(head);
+
+    PrintQ(*head);
+
 
     printf("hello, world");
     return 0;

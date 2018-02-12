@@ -94,7 +94,15 @@ void RotateQ(queueElement **head){
     (*head) = (*head)->next;
 }
 
+void PrintQ(queueElement *head){
+    queueElement *tmp = head;
 
+    while (tmp->next != head){
+        printf("%d ", tmp->payload);
+        tmp = tmp->next;
+    }
+    printf("%d \n", tmp->payload);
+}
 
 
 
