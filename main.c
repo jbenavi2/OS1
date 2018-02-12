@@ -6,19 +6,7 @@
 int main() {
 
 
-//    queueElement **head;
-//    queueElement *item;
-//    queueElement *item2;
-//    queueElement *item3;
-//
-//    head = malloc(sizeof(queueElement));
-//
-//    InitQueue(head);
-//
-//
-//
-//
-//    printf("%d\n", (*head)->next->next->next->payload);
+
 
     queueElement **head;
     head = malloc(sizeof(queueElement));
