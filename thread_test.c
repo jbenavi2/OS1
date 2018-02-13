@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include "threads.h"
 #include "q.h"
 
@@ -7,10 +8,12 @@ TCB_t *RunQ;  //global header RunQ
 
 void thread1(){
     int x = 0;
+
     while (1){
         printf("x = %d\n", x);
         x++;
         yield();
+        sleep(1);
     }
 }
 
@@ -20,6 +23,7 @@ void thread2(){
         printf("y = %d\n", y);
         y++;
         yield();
+        sleep(1);
     }
 }
 
