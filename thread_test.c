@@ -1,11 +1,35 @@
 #include <stdio.h>
 #include <string.h>
+#include "threads.h"
 #include "q.h"
 
+TCB_t *RunQ;  //global header RunQ
+
+void thread1(){
+    int x = 0;
+    while (1){
+        printf("x = %d\n", x);
+        x++;
+        yield();
+    }
+}
+
+void thread2(){
+    int y = 5;
+    while(1){
+        printf("y = %d\n", y);
+        y++;
+        yield();
+    }
+}
 
 int main() {
-
-
+    TCB_t *RunQ;
+    //RunQ = malloc(sizeof(TCB_t));
+    InitQueue(&RunQ);
+    start_thread(thread1);
+    start_thread(thread2);
+    run();
 
 /// These are the previous tests done for part 1
 //    queueElement **head;

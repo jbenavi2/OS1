@@ -30,8 +30,13 @@ void run(){
 }
 
 void yield(){
+    ucontext_t *from;
+    ucontext_t *to;
+    from = &(RunQ->context);
     RotateQ(&RunQ);
-    swapcontext(&(RunQ->prev->context), &(RunQ->context));
+    to = &(RunQ->context);
+    swapcontext(from, to);
+
 }
 
 
