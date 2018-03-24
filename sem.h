@@ -18,6 +18,9 @@ typedef struct Semaphore{
 }Semaphore;
 
 void InitSem(Semaphore *sem, int value){
+    sem->tcb_queue = (TCB_t*)malloc(sizeof(TCB_t));
+    sem->value = value;
+
 
 }
 
