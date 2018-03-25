@@ -24,7 +24,30 @@ void InitSem(Semaphore *sem, int value){
 
 }
 
+void P(Semaphore *sem){
 
+    sem->value--;
+
+    if(sem->value < 0){
+        TCB_t *T = DelQueue(RunQ);
+        AddQueue(sem->tcb_queue, T);
+        swapcontext(&(T->context), &(RunQ->context));
+
+    }
+}
+
+void V(Semaphore *sem){
+
+    sem->value++;
+
+    if(sem->value <= 0){
+        TCB_t *T = DelQueue(sem->tcb_queue);
+        AddQueue(RunQ, T);
+        yield();
+
+
+    }
+}
 
 
 
