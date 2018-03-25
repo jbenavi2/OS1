@@ -76,23 +76,30 @@ void Consumer_2(){
     }
 }
 
-void thread3(){
-    int z = 10;
-    while(1){
-        printf("Thread 3\n");
-        printf("local z = %d\n", z);
-        printf("global a = %d\n\n", global_a);
-        z++;
-        global_a++;
-        yield();
-        sleep(2);
-    }
-}
 
 int main() {
     TCB_t *RunQ;
+    full = malloc(sizeof(Semaphore));
+    empty = malloc(sizeof(Semaphore));
+    mutex = malloc(sizeof(Semaphore));
+
+    full->tcb_wait = malloc(sizeof(TCB_t));
+    empty->tcb_wait = malloc(sizeof(TCB_t));
+    mutex->tcb_wait = malloc(sizeof(TCB_t));
+
     InitQueue(&RunQ);
-    start_thread(thread3);
+    InitQueue(&(full->tcb_wait));
+    InitQueue(&(empty->tcb_wait));
+    InitQueue(&(mutex->tcb_wait));
+
+    InitSem(full, 0);
+    InitSem(empty, 1);
+    InitSem(mutex, 1);
+
+    start_thread(Producer_1);
+    start_thread(Producer_2);
+    start_thread(Consumer_1);
+    start_thread(Consumer_2);
     run();
 
 /// These are the previous tests done for part 1
