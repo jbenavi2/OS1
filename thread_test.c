@@ -12,34 +12,67 @@
 #include <unistd.h>
 #include "threads.h"
 #include "q.h"
+#include "sem.h"
 
 TCB_t *RunQ;  //global header RunQ
-int a = 0;
+int global_a = 0;
 
-void thread1(){
-    int x = 0;
+Semaphore *empty, *full, *mutex;
 
-    while (1){
-        printf("Thread 1\n");
-        printf("local x = %d\n", x);
-        printf("global a = %d\n\n", a);
-        x++;
-        a++;
-        yield();
+void Producer_1(){
+    int local_x = 0;
+    while(1){
+        P(empty);
+        P(mutex);
+        local_x++;
+        printf("Producer 1:  local count = %d, global count = %d\n", local_x, global_a);
+        global_a++;
         sleep(2);
+        V(mutex);
+        V(full);
+
+    }
+}
+void Producer_2(){
+    int local_x = 0;
+    while(1){
+        P(empty);
+        P(mutex);
+        local_x = local_x + 2;
+        printf("Producer 2:  local count = %d, global count = %d\n", local_x, global_a);
+        global_a++;
+        sleep(2);
+        V(mutex);
+        V(full);
+
     }
 }
 
-void thread2(){
-    int y = 5;
-    while(1){
-        printf("Thread 2\n");
-        printf("local y = %d\n", y);
-        printf("global a = %d\n\n", a);
-        y++;
-        a++;
-        yield();
+void Consumer_1(){
+    int local_x = 0;
+    while (1){
+        P(full);
+        P(mutex);
+        local_x--;
+        printf("Consumer 1:  local count = %d, glocal count = %d\n", local_x, global_a);
+        global_a++;
         sleep(2);
+        V(mutex);
+        V(empty);
+    }
+}
+
+void Consumer_2(){
+    int local_x = 0;
+    while (1){
+        P(full);
+        P(mutex);
+        local_x = local_x - 2;
+        printf("Consumer 2:  local count = %d, glocal count = %d\n", local_x, global_a);
+        global_a++;
+        sleep(2);
+        P(mutex);
+        V(empty);
     }
 }
 
@@ -48,9 +81,9 @@ void thread3(){
     while(1){
         printf("Thread 3\n");
         printf("local z = %d\n", z);
-        printf("global a = %d\n\n", a);
+        printf("global a = %d\n\n", global_a);
         z++;
-        a++;
+        global_a++;
         yield();
         sleep(2);
     }
@@ -59,8 +92,6 @@ void thread3(){
 int main() {
     TCB_t *RunQ;
     InitQueue(&RunQ);
-    start_thread(thread1);
-    start_thread(thread2);
     start_thread(thread3);
     run();
 

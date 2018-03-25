@@ -14,11 +14,11 @@
 
 typedef struct Semaphore{
     int value;
-    TCB_t *tcb_queue;
+    TCB_t *tcb_wait;
 }Semaphore;
 
 void InitSem(Semaphore *sem, int value){
-    sem->tcb_queue = (TCB_t*)malloc(sizeof(TCB_t));
+    sem->tcb_wait = (TCB_t*)malloc(sizeof(TCB_t));
     sem->value = value;
 
 
@@ -30,7 +30,7 @@ void P(Semaphore *sem){
 
     if(sem->value < 0){
         TCB_t *T = DelQueue(RunQ);
-        AddQueue(sem->tcb_queue, T);
+        AddQueue(sem->tcb_wait, T);
         swapcontext(&(T->context), &(RunQ->context));
 
     }
@@ -41,7 +41,7 @@ void V(Semaphore *sem){
     sem->value++;
 
     if(sem->value <= 0){
-        TCB_t *T = DelQueue(sem->tcb_queue);
+        TCB_t *T = DelQueue(sem->tcb_wait);
         AddQueue(RunQ, T);
         yield();
 
