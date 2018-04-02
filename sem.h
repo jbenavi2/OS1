@@ -29,8 +29,8 @@ void P(Semaphore *sem){
     sem->value--;
 
     if(sem->value < 0){
-        TCB_t *T = DelQueue(RunQ);
-        AddQueue(sem->tcb_wait, T);
+        TCB_t *T = DelQueue(&RunQ);
+        AddQueue(&(sem->tcb_wait), T);
         swapcontext(&(T->context), &(RunQ->context));
 
     }
@@ -41,8 +41,8 @@ void V(Semaphore *sem){
     sem->value++;
 
     if(sem->value <= 0){
-        TCB_t *T = DelQueue(sem->tcb_wait);
-        AddQueue(RunQ, T);
+        TCB_t *T = DelQueue(&(sem->tcb_wait));
+        AddQueue(&RunQ, T);
         yield();
 
 
