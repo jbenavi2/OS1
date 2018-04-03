@@ -1,60 +1,55 @@
-//
-// Created by echob on 3/24/2018.
-//
 
-#ifndef OS1_SEM_H
-#define OS1_SEM_H
 
-#include <stdio.h>
+#ifndef PROJECT_2_SEM_H
+#define PROJECT_2_SEM_H
+
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "q.h"
 #include "tcb.h"
 #include "threads.h"
 
-typedef struct Semaphore{
+typedef struct Semaphore
+{
     int value;
-    Queue *tcb_waitQ;
-}Semaphore;
+    Queue *tcb_queue;
+} Semaphore;
 
-void InitSem(Semaphore *sem, int value){
-    sem = (Semaphore*)malloc(sizeof(Semaphore));
+Semaphore *InitSem(int value);
+void P(Semaphore *sem);
+void V(Semaphore *sem);
+
+Semaphore * InitSem(int value)
+{
+    Semaphore *sem = ALLOC(Semaphore);
     sem->value = value;
-    sem->tcb_waitQ = InitQueue();
-
+    sem->tcb_queue = InitQueue();
+    return sem;
 }
 
-void P(Semaphore *sem){
-
+void P(Semaphore *sem)
+{
     sem->value--;
-
-    if(sem->value < 0){
-        TCB_t *T = DelQueue(RunQ);
-        AddQueue(sem->tcb_waitQ, T);
-        swapcontext(&(T->context), &RunQ->head->context);
-
+    if(sem->value < 0)
+    {
+        TCB_t *tcb = DelQueue(runQ);
+        AddQueue(sem->tcb_queue, tcb);
+        swapcontext(&tcb->context, &runQ->head->context);
     }
 }
 
-void V(Semaphore *sem){
-
+void V(Semaphore *sem)
+{
     sem->value++;
-
-    if(sem->value <= 0){
-        TCB_t *T = DelQueue(sem->tcb_waitQ);
-        AddQueue(RunQ, T);
-
-
-
+    if (sem->value <= 0)
+    {
+        TCB_t *tcb = DelQueue(sem->tcb_queue);
+        AddQueue(runQ, tcb);
     }
-
     yield();
 }
 
 
 
-
-
-
-
-#endif //OS1_SEM_H
+#endif //PROJECT_2_SEM_H

@@ -1,22 +1,18 @@
-//
-// Created by echob on 2/11/2018.
-//
 
-#ifndef OS1_TCB_H
-#define OS1_TCB_H
+
+#ifndef PROJECT_2_TCB_H
+#define PROJECT_2_TCB_H
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <ucontext.h>
+#include <string.h>
 
 typedef struct TCB_t {
-    struct TCB_t     *next;
-    struct TCB_t     *prev;
-    ucontext_t      context;
+    struct TCB_t *next;
+    struct TCB_t *prev;
+    ucontext_t context;
 } TCB_t;
-
-
 
 void init_TCB (TCB_t *tcb, void *function, void *stackP, int stack_size)
 {
@@ -27,9 +23,4 @@ void init_TCB (TCB_t *tcb, void *function, void *stackP, int stack_size)
     makecontext(&tcb->context, function, 0);// context is now cooked
 }
 
-
-
-
-
-
-#endif //OS1_TCB_H
+#endif //PROJECT_2_TCB_H
