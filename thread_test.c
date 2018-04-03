@@ -14,93 +14,139 @@
 #include "q.h"
 #include "sem.h"
 
-TCB_t *RunQ;  //global header RunQ
-int global_a = 0;
+int store[10];
+int produce, consume = 0;
 
-Semaphore *empty, *full, *mutex;
+Semaphore *empty, *full, *ProducerMutex, *ConsumerMutex;
 
 void Producer_1(){
-    int local_x = 0;
+
     while(1){
         P(empty);
-        P(mutex);
-        local_x++;
-        printf("Producer 1:  local count = %d, global count = %d\n", local_x, global_a);
-        global_a++;
-        sleep(2);
-        V(mutex);
-        V(full);
+        P(ProducerMutex);
 
+        store[produce] = 1;
+        produce = (produce + 1) % 10;
+        printf("Producer #1: ");
+        int i;
+        for(i = 0; i < 10; i++){
+            printf("%d\t", store[i]);
+        }
+        printf("\n");
+        sleep(2);
+
+        V(ProducerMutex);
+        V(full);
     }
 }
+
 void Producer_2(){
-    int local_x = 0;
+
     while(1){
         P(empty);
-        P(mutex);
-        local_x = local_x + 2;
-        printf("Producer 2:  local count = %d, global count = %d\n", local_x, global_a);
-        global_a++;
-        sleep(2);
-        V(mutex);
-        V(full);
+        P(ProducerMutex);
 
+        store[produce] = 1;
+        produce = (produce + 1) % 10;
+        printf("Producer #2: ");
+        int i;
+        for(i = 0; i < 10; i++){
+            printf("%d\t", store[i]);
+        }
+        printf("\n");
+        sleep(2);
+
+        V(ProducerMutex);
+        V(full);
     }
 }
 
 void Consumer_1(){
-    int local_x = 0;
-    while (1){
+
+    while(1){
         P(full);
-        P(mutex);
-        local_x--;
-        printf("Consumer 1:  local count = %d, glocal count = %d\n", local_x, global_a);
-        global_a++;
+        P(ConsumerMutex);
+
+        store[consume] = 0;
+        consume = (consume + 1) % 10;
+        printf("Consumer #1: ");
+        int i;
+        for(i = 0; i < 10; i++){
+            printf("%d\t", store[i]);
+        }
+        printf("\n");
         sleep(2);
-        V(mutex);
+
+        V(ConsumerMutex);
         V(empty);
     }
 }
 
 void Consumer_2(){
-    int local_x = 0;
-    while (1){
+
+    while(1){
         P(full);
-        P(mutex);
-        local_x = local_x - 2;
-        printf("Consumer 2:  local count = %d, glocal count = %d\n", local_x, global_a);
-        global_a++;
+        P(ConsumerMutex);
+
+        store[consume] = 0;
+        consume = (consume + 1) % 10;
+        printf("Consumer #2: ");
+        int i;
+        for(i = 0; i < 10; i++){
+            printf("%d\t", store[i]);
+        }
+        printf("\n");
         sleep(2);
-        P(mutex);
+
+        V(ConsumerMutex);
         V(empty);
     }
 }
 
-
 int main() {
-    TCB_t *RunQ;
-    full = malloc(sizeof(Semaphore));
-    empty = malloc(sizeof(Semaphore));
-    mutex = malloc(sizeof(Semaphore));
 
-    full->tcb_wait = malloc(sizeof(TCB_t));
-    empty->tcb_wait = malloc(sizeof(TCB_t));
-    mutex->tcb_wait = malloc(sizeof(TCB_t));
-
-    InitQueue(&RunQ);
-    InitQueue(&(full->tcb_wait));
-    InitQueue(&(empty->tcb_wait));
-    InitQueue(&(mutex->tcb_wait));
-
+    RunQ = InitQueue();
     InitSem(full, 0);
-    InitSem(empty, 1);
-    InitSem(mutex, 1);
+    InitSem(empty, 10);
+    InitSem(ProducerMutex, 1);
+    InitSem(ConsumerMutex, 1);
+
+    int i;
+    for(i = 0; i < 10; i++){
+        store[i] = 0;
+    }
 
     start_thread(Producer_1);
     start_thread(Producer_2);
     start_thread(Consumer_1);
     start_thread(Consumer_2);
+
     run();
+
+
+//    TCB_t *RunQ;
+//    full = malloc(sizeof(Semaphore));
+//    empty = malloc(sizeof(Semaphore));
+//    //mutex = malloc(sizeof(Semaphore));
+//
+//    full->tcb_waitQ = malloc(sizeof(TCB_t));
+//    empty->tcb_waitQ = malloc(sizeof(TCB_t));
+//   // mutex->tcb_waitQ = malloc(sizeof(TCB_t));
+//
+//    InitQueue(&RunQ);
+//    InitQueue(&(full->tcb_waitQ));
+//    InitQueue(&(empty->tcb_waitQ));
+//   // InitQueue(&(mutex->tcb_waitQ));
+//
+//    InitSem(full, 0);
+//    InitSem(empty, 1);
+//   // InitSem(mutex, 1);
+//
+//    start_thread(Producer_1);
+//  //  start_thread(Producer_2);
+//   // start_thread(Consumer_1);
+//   // start_thread(Consumer_2);
+//    run();
 
 /// These are the previous tests done for part 1
 //    queueElement **head;

@@ -12,29 +12,31 @@
 #include <ucontext.h>
 
 //global header runQ
-TCB_t *RunQ;
+Queue *RunQ;
 
 //Step 2
 void start_thread(void (*function)(void)){
     void *stack = malloc(8192);
-    TCB_t *tcb = (TCB_t*)malloc(sizeof(TCB_t));
+//    TCB_t *tcb = (TCB_t*)malloc(sizeof(TCB_t));
+    TCB_t *tcb = NewItem();
     init_TCB(tcb, function, stack, 8192);
-    AddQueue(&RunQ, tcb);
+    AddQueue(RunQ, tcb);
 }
 
 //step 3:  Write routines called "yield" and "run" which cranks up the works
 void run(){
     ucontext_t parent;
     getcontext(&parent);
-    swapcontext(&parent, &(RunQ->context));
+//    swapcontext(&parent, &(RunQ->context));
+    swapcontext(&parent, &RunQ->head->context);
 }
 
 void yield(){
     ucontext_t *from;
     ucontext_t *to;
-    from = &(RunQ->context);
-    RotateQ(&RunQ);
-    to = &(RunQ->context);
+    from = &RunQ->head->context;
+    RotateQ(RunQ);
+    to = &RunQ->head->context;
     swapcontext(from, to);
 
 }
