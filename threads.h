@@ -1,7 +1,7 @@
 
 
-#ifndef PROJECT_2_THREADS_H
-#define PROJECT_2_THREADS_H
+#ifndef PROJECT_3_THREADS_H
+#define PROJECT_3_THREADS_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -35,4 +35,4 @@ void yield()
     swapcontext(&current_context, &new_context);
 }
 
-#endif //PROJECT_2_THREADS_H
+#endif //PROJECT_3_THREADS_H

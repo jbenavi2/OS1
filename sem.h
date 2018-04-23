@@ -1,7 +1,7 @@
 
 
-#ifndef PROJECT_2_SEM_H
-#define PROJECT_2_SEM_H
+#ifndef PROJECT_3_SEM_H
+#define PROJECT_3_SEM_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -52,4 +52,4 @@ void V(Semaphore *sem)
 
 
 
-#endif //PROJECT_2_SEM_H
+#endif //PROJECT_3_SEM_H

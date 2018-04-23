@@ -1,7 +1,7 @@
 
 
-#ifndef PROJECT_2_Q_H
-#define PROJECT_2_Q_H
+#ifndef PROJECT_3_Q_H
+#define PROJECT_3_Q_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -88,4 +88,4 @@ void RotateQ(struct Queue *queue)
 
 
 
-#endif //PROJECT_2_Q_H
+#endif //PROJECT_3_Q_H

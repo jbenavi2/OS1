@@ -1,7 +1,7 @@
 
 
-#ifndef PROJECT_2_TCB_H
-#define PROJECT_2_TCB_H
+#ifndef PROJECT_3_TCB_H
+#define PROJECT_3_TCB_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,4 +23,4 @@ void init_TCB (TCB_t *tcb, void *function, void *stackP, int stack_size)
     makecontext(&tcb->context, function, 0);// context is now cooked
 }
 
-#endif //PROJECT_2_TCB_H
+#endif //PROJECT_3_TCB_H
