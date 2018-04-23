@@ -3,4 +3,4 @@ project(OS1 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(OS1 proj-2.c q.h tcb.h threads.h sem.h)
+add_executable(OS1 proj-3.c q.h tcb.h threads.h sem.h)
