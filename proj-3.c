@@ -31,7 +31,7 @@ void Reader(){
 
         //SP READ
 
-        printf("I'm reading");
+        printf("I'm reading\n");
 
         sleep(1);
 
@@ -59,7 +59,7 @@ void Writer(){
 
         //SP WRITE
 
-        printf("I'm writing");
+        printf("I'm writing\n");
 
         sleep(1);
 
