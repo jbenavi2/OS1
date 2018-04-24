@@ -1,7 +1,7 @@
 /*
  * Javier Benavides
- * CSE 330 Project 2
- * Due 4/2/18
+ * CSE 330 Project 3
+ * Due 4/23/18
  */
 
 
@@ -16,7 +16,7 @@
 int rc, wc, rwc, wwc = 0;
 Semaphore *R_sem, *W_sem, *mutex;
 
-void Reader(){
+void Reader_1(){
     while(1){
         P(mutex);
         if(wwc > 0 || wc > 0){
@@ -31,7 +31,7 @@ void Reader(){
 
         //SP READ
 
-        printf("I'm reading\n");
+        printf("I'm reading 1\n");
 
         sleep(1);
 
@@ -44,7 +44,63 @@ void Reader(){
     }
 }
 
-void Writer(){
+void Reader_2(){
+    while(1){
+        P(mutex);
+        if(wwc > 0 || wc > 0){
+            rwc++;
+            V(mutex);
+            P(R_sem);
+            P(mutex);
+            rwc--;
+        }
+        rc++;
+        V(mutex);
+
+        //SP READ
+
+        printf("I'm reading 2\n");
+
+        sleep(1);
+
+        P(mutex);
+        rc--;
+        if(rc == 0 && wwc > 0){
+            V(W_sem);
+        }
+        V(mutex);
+    }
+}
+
+void Reader_3(){
+    while(1){
+        P(mutex);
+        if(wwc > 0 || wc > 0){
+            rwc++;
+            V(mutex);
+            P(R_sem);
+            P(mutex);
+            rwc--;
+        }
+        rc++;
+        V(mutex);
+
+        //SP READ
+
+        printf("I'm reading 3\n");
+
+        sleep(1);
+
+        P(mutex);
+        rc--;
+        if(rc == 0 && wwc > 0){
+            V(W_sem);
+        }
+        V(mutex);
+    }
+}
+
+void Writer_1(){
     while(1){
         P(mutex);
         if(rc > 0 || wc > 0){
@@ -59,7 +115,7 @@ void Writer(){
 
         //SP WRITE
 
-        printf("I'm writing\n");
+        printf("I'm writing 1\n");
 
         sleep(1);
 
@@ -78,7 +134,39 @@ void Writer(){
     }
 }
 
+void Writer_2(){
+    while(1){
+        P(mutex);
+        if(rc > 0 || wc > 0){
+            wwc++;
+            V(mutex);
+            P(W_sem);
+            P(mutex);
+            wwc--;
+        }
+        wc++;
+        V(mutex);
 
+        //SP WRITE
+
+        printf("I'm writing 2\n");
+
+        sleep(1);
+
+        P(mutex);
+        wc--;
+        if(rwc > 0){
+            int i;
+            for(i = 0; i < rwc; i++){
+                V(R_sem);
+            }
+        }
+        else if(wwc > 0){
+            V(W_sem);
+        }
+        V(mutex);
+    }
+}
 
 int main()
 {
@@ -89,11 +177,11 @@ int main()
 
 
 
-    start_thread(Writer);
-    start_thread(Writer);
-    start_thread(Reader);
-    start_thread(Reader);
-    start_thread(Reader);
+    start_thread(Writer_1);
+    start_thread(Writer_2);
+    start_thread(Reader_1);
+    start_thread(Reader_2);
+    start_thread(Reader_3);
 
     run();
 
